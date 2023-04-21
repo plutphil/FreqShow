@@ -27,7 +27,24 @@ from rtlsdr import *
 
 import freqshow
 
-
+class SDRMock():
+	def __init__(s):
+		s.auto_gain=1
+		s.samples=2048
+		s.cf = 10000
+		pass
+	def read_samples(self,samples):
+		return [1 for i in range(samples*2)]
+	def get_center_freq(s):
+		return s.cf
+	def set_center_freq(s,f):
+		s.cf=f
+	def get_sample_rate(s):
+		return s.samples
+	def set_sample_rate(s,samples):
+		s.samples=samples
+	def set_manual_gain_enabled(s,tf):
+		s.mangain=tf
 class FreqShowModel(object):
 	def __init__(self, width, height):
 		"""Create main FreqShow application model.  Must provide the width and
@@ -42,11 +59,12 @@ class FreqShowModel(object):
 		self.set_min_intensity('AUTO')
 		self.set_max_intensity('AUTO')
 		# Initialize RTL-SDR library.
-		self.sdr = RtlSdr()
+		#self.sdr = RtlSdr()
+		self.sdr = SDRMock()
 		self.set_center_freq(90.3)
 		self.set_sample_rate(2.4)
 		self.set_gain('AUTO')
-
+		#self.sdr = SDRMock()
 	def _clear_intensity(self):
 		if self.min_auto_scale:
 			self.min_intensity = None

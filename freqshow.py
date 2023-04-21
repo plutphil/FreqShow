@@ -70,16 +70,18 @@ ui.Button.border_px    = 2
 
 if __name__ == '__main__':
 	# Initialize pygame and SDL to use the PiTFT display and touchscreen.
-	os.putenv('SDL_VIDEODRIVER', 'fbcon')
-	os.putenv('SDL_FBDEV'      , '/dev/fb1')
-	os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
-	os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
+	#os.putenv('SDL_VIDEODRIVER', 'fbcon')
+	#os.putenv('SDL_FBDEV'      , '/dev/fb1')
+	#os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
+	#os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
 	pygame.display.init()
 	pygame.font.init()
-	pygame.mouse.set_visible(False)
+	#pygame.mouse.set_visible(False)
 	# Get size of screen and create main rendering surface.
 	size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-	screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+	#screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+	size = (800,450)
+	screen = pygame.display.set_mode(size)
 	# Display splash screen.
 	splash = pygame.image.load('freqshow_splash.png')
 	screen.fill(MAIN_BG)
@@ -89,15 +91,20 @@ if __name__ == '__main__':
 	# Create model and controller.
 	fsmodel = model.FreqShowModel(size[0], size[1])
 	fscontroller = controller.FreqShowController(fsmodel)
-	time.sleep(2.0)
+	time.sleep(0.1)
 	# Main loop to process events and render current view.
 	lastclick = 0
 	while True:
 		# Process any events (only mouse events for now).
 		for event in pygame.event.get():
-			if event.type is pygame.MOUSEBUTTONDOWN \
-				and (time.time() - lastclick) >= CLICK_DEBOUNCE:
+			if event.type is pygame.MOUSEBUTTONDOWN:
+				#and (time.time() - lastclick) >= CLICK_DEBOUNCE:
 				lastclick = time.time()
+				print(event)
+				fscontroller.current().click(pygame.mouse.get_pos())
+			if event.type == pygame.MOUSEBUTTONUP:
+				pos = pygame.mouse.get_pos()
+				print(pos)
 				fscontroller.current().click(pygame.mouse.get_pos())
 		# Update and render the current view.
 		fscontroller.current().render(screen)
