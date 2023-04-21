@@ -1,27 +1,3 @@
-# FreqShow main application and configuration.
-# Author: Tony DiCola (tony@tonydicola.com)
-#
-# The MIT License (MIT)
-#
-# Copyright (c) 2014 Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 import os
 import time
 
@@ -71,17 +47,17 @@ ui.Button.border_px    = 2
 if __name__ == '__main__':
 	# Initialize pygame and SDL to use the PiTFT display and touchscreen.
 	#os.putenv('SDL_VIDEODRIVER', 'fbcon')
-	#os.putenv('SDL_FBDEV'      , '/dev/fb1')
+	os.putenv('SDL_FBDEV'      , '/dev/fb1')
 	#os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
 	#os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
 	pygame.display.init()
 	pygame.font.init()
-	#pygame.mouse.set_visible(False)
+	pygame.mouse.set_visible(False)
 	# Get size of screen and create main rendering surface.
 	size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-	#screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-	size = (800,450)
-	screen = pygame.display.set_mode(size)
+	screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+	#size = (800,450)
+	#screen = pygame.display.set_mode(size)
 	# Display splash screen.
 	splash = pygame.image.load('freqshow_splash.png')
 	screen.fill(MAIN_BG)
@@ -97,11 +73,15 @@ if __name__ == '__main__':
 	while True:
 		# Process any events (only mouse events for now).
 		for event in pygame.event.get():
-			if event.type is pygame.MOUSEBUTTONDOWN:
+			print(event.type)
+			if event.type is pygame.MOUSEBUTTONDOWN or event.type == 1792:
 				#and (time.time() - lastclick) >= CLICK_DEBOUNCE:
+				x = event.x * size[0]
+				y = event.y * size[1]
 				lastclick = time.time()
 				print(event)
-				fscontroller.current().click(pygame.mouse.get_pos())
+				#fscontroller.current().click(pygame.mouse.get_pos())
+				fscontroller.current().click((x,y))
 			if event.type == pygame.MOUSEBUTTONUP:
 				pos = pygame.mouse.get_pos()
 				print(pos)

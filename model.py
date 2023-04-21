@@ -1,5 +1,4 @@
-# FreqShow main application model/state.
-# Author: Tony DiCola (tony@tonydicola.com)
+# FreqShow main application model/state. Author: Tony DiCola (tony@tonydicola.com)
 #
 # The MIT License (MIT)
 #
@@ -59,8 +58,11 @@ class FreqShowModel(object):
 		self.set_min_intensity('AUTO')
 		self.set_max_intensity('AUTO')
 		# Initialize RTL-SDR library.
-		#self.sdr = RtlSdr()
-		self.sdr = SDRMock()
+		try:
+			self.sdr = RtlSdr()
+		except Exception as e:
+			print(e)
+			self.sdr = SDRMock()
 		self.set_center_freq(90.3)
 		self.set_sample_rate(2.4)
 		self.set_gain('AUTO')
